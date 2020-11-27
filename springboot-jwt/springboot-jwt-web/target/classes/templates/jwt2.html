@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+    <div id="form_data">
+        <input type="text" name="name" id="name"><br>
+        <input type="password" name="password" id="password"><br>
+        <button id="sub_ajax">login in</button>
+    </div>
+
+    <div id="res"></div>
+
+    <button id="getData">获取数据</button>
+    <hr>
+    <table border="1" id="dataTable">
+        <tr>
+            <td>id</td>
+            <td>name</td>
+        </tr>
+    </table>
+
+    <script>
+        $("#sub_ajax").click(function () {
+            $.ajax({
+                url:'/user/login',
+                type:'post',
+                dataType:'json',
+                data:{name:$("#name").val()},
+                success:function (res) {
+                    $("#res").html(res.token);
+                },
+                error:function (res) {
+                    console.log(res);
+                }
+            })
+        });
+
+        $("#getData").click(function () {
+            $.ajax({
+                url:'/user/list',
+                type:'get',
+                dataType:'json',
+                data:{},
+                success:function (res) {
+                    var tb = '<tr>\n' +
+                        '            <td>id</td>\n' +
+                        '            <td>name</td>\n' +
+                        '        </tr>';
+                    for(var i = 0; i < res.length; i++){
+                        var tr = '<tr>\n' +
+                            '            <td>'+res[i].id+'</td>\n' +
+                            '            <td>'+res[i].name+'</td>\n' +
+                            '        </tr>';
+                        tb += tr;
+                    }
+                    $("#dataTable").html(tb);
+                },
+                error:function (res) {
+                    console.log(res);
+                }
+            })
+        });
+
+    </script>
+
+</body>
+</html>
